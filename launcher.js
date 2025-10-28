@@ -3,10 +3,6 @@ const express = require("express");
 const logger = require("./src/Logger");
 const {runUpdateFlow} = require("./src/UpdateFlow");
 
-logger.info(process.env)
-console.log("process")
-console.log(process.env)
-
 const API_HOST = process.env.API_HOST || "http://localhost";
 const API_PORT = process.env.API_PORT || 3080;
 

@@ -22,12 +22,13 @@ async function runUpdateFlow(forcedUpdate = true) {
 
     let envVars;
     if (forcedUpdate) {
-      envVars = await handleDownloadExecutableWithVersioning(true);
+      envVars = await handleDownloadExecutableWithVersioning(forcedUpdate = true);
     } else {
-      aenvVars = await handleDownloadExecutableWithVersioning(false);
+      envVars = await handleDownloadExecutableWithVersioning(forcedUpdate = false);
     }
 
     await startProcess(envVars);
+
   } catch (error) {
     logger.error(`Falha no fluxo de atualização: ${error.stack}`);
   } finally {

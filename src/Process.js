@@ -24,7 +24,7 @@ async function stopProcess() {
   });
 }
 
-function startProcess() {
+function startProcess(envs) {
   logger.info(`Iniciando o processo: ${destFile}`);
   try {
     const exe = path.dirname(destFile);
@@ -32,7 +32,7 @@ function startProcess() {
       detached: true,
       stdio: "ignore",
       shell: true,
-      env: { ...process.env, ...envVars },
+      env: { ...process.env, ...envs },
       cwd: exe,
     });
     sgpProcess.unref();

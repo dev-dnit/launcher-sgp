@@ -15,19 +15,29 @@ const {
 
 const destFile = path.join(EXECUTABLE_LOCAL_FOLDER, EXECUTABLE_LOCAL_NAME);
 
-async function handleDownloadExecutableWithVersioning() {
-  logger.info("Verificando a necessidade de atualização...");
+async function handleDownloadExecutableWithVersioning(forceUpdate = false) {
+  if (forceUpdate) {
+    await downloadExecutable()
+    return []
+  }
+  // #TODO: Corrigir jaja essa logica para tbm baixar o configLocal e funcionar
+  await downloadExecutable()
+  return [];
+}
 
+
+async function updateLocalVersion() {
   const urlWithAuth = `${REMOTE_CONFIG_URL}?token=${GITHUB_TOKEN}`;
   const urlWithCacheBuster = `${urlWithAuth}&v=${Date.now()}`;
 
+  console.log(`urlWithCacheBuster:${urlWithCacheBuster}`)
   const response = await axios.get(urlWithCacheBuster);
   const remoteConfig = response.data;
   logger.info(`Versão remota encontrada: ${remoteConfig.version}`);
 
   const localConfigPath = path.join(
-    EXECUTABLE_LOCAL_FOLDER,
-    "local_config.json"
+      EXECUTABLE_LOCAL_FOLDER,
+      "local_config.json"
   );
   let localVersion = "0.0.0";
 
@@ -46,7 +56,7 @@ async function handleDownloadExecutableWithVersioning() {
     await downloadExecutable(remoteConfig.executable.url);
     await fs.writeFile(localConfigPath, JSON.stringify(remoteConfig, null, 2));
     logger.info(
-      `Configuração local atualizada para a versão ${remoteConfig.version}`
+        `Configuração local atualizada para a versão ${remoteConfig.version}`
     );
   } else {
     logger.info("Nenhuma atualização de executável necessária.");
@@ -55,8 +65,10 @@ async function handleDownloadExecutableWithVersioning() {
   return remoteConfig.environment_variables;
 }
 
-async function downloadExecutable(downloadUrl) {
-  const url = downloadUrl || EXECUTABLE_URL_DOWNLOAD;
+
+
+async function downloadExecutable() {
+  const url = EXECUTABLE_URL_DOWNLOAD;
   createDirectory(EXECUTABLE_LOCAL_FOLDER);
 
   logger.info(`Baixando arquivo de ${url}...`);
@@ -80,6 +92,7 @@ async function downloadExecutable(downloadUrl) {
     });
   });
 }
+
 
 module.exports = {
   downloadExecutable,
