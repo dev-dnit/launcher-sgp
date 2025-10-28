@@ -1,18 +1,36 @@
 {
-  "name": "sgp-launcher",
+  "name": "sgp-launcher-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Serviço de API para gerenciamento remoto do SGP.",
+  "main": "launcher.js",
+  "bin": "launcher.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node launcher.js",
+    "build": "pkg . --output sgp-launcher.exe"
   },
-  "keywords": [],
-  "author": "Guilherme",
+  "keywords": [
+    "sgp",
+    "launcher",
+    "api"
+  ],
+  "author": "Guilherme Candido",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "axios": "^1.12.2",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "find-process": "^2.0.0"
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-windows": "^1.0.0-beta.8"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  },
+  "pkg": {             
+    "scripts": "launcher.js",
+    "assets": [
+      "node_modules/**/*"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ]
   }
 }
