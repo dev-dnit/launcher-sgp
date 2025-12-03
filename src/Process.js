@@ -75,6 +75,8 @@ async function stopProcess(env) {
  * @returns {Promise<void>} Promise that resolves after starting the process
  */
 async function startProcess(env) {
+  const { execFile } = require('child_process');
+
   env.forEach(e => {
     try {
       const variaveis = getVariavelAmbiente(e);
@@ -82,21 +84,24 @@ async function startProcess(env) {
 
       logger.info(`[${e}] Iniciando execução do SGP: ${destFile}`);
 
-      const sgpProcess = spawn(destFile, [], {
+      // Use execFile instead of spawn
+      execFile(destFile, [], {
         detached: true,
-        stdio: "ignore",
-        shell: true,
-        env: {...variaveis},
+        windowsHide: true,
         cwd: path.dirname(destFile),
+        env: { ...variaveis },
+      }, (error) => {
+        if (error) {
+          logger.error(`[${e}] Erro ao iniciar SGP: ${error.message}`);
+        }
       });
-      sgpProcess.unref();
 
-      logger.info(`[${e}] SGP iniciado com sucesso em segundo plano com PID: ${sgpProcess.pid}.`);
+      logger.info(`[${e}] SGP iniciado com sucesso em segundo plano (oculto).`);
 
     } catch (error) {
       logger.error(`[${e}] Falha ao iniciar o SGP: ${error.message}`);
     }
-  })
+  });
 }
 
 
