@@ -25,8 +25,8 @@ async function runUpdateFlow(forcedUpdate, env) {
     logger.info(`Iniciando fluxo de atualização ${flowType}...`);
 
     await updateEnvs(forcedUpdate);
-    await handleDownloadExecutableWithVersioning(forcedUpdate, env)
     await stopProcess(env);
+    await handleDownloadExecutableWithVersioning(forcedUpdate, env)
     await startProcess(env);
 
   } catch (error) {
